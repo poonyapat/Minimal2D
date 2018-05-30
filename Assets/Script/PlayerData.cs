@@ -281,7 +281,7 @@ public class PlayerData : MonoBehaviour
         {
             if (curSta < 0)
                 curSta = 0;
-            else if (curHp > MaxSta)
+            else if (curSta > MaxSta)
                 curSta = MaxSta;
             else
                 curSta = value;
