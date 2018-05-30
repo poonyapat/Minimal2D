@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour {
 	void OnCollisionStay2D(Collision2D coll){
 		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
+			rb2d.AddForce(new Vector2(0, 200));
 			pd.UpdateLatestAttackTime();
 		}
 	}
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
+			rb2d.AddForce(new Vector2(0, 300));
 			pd.UpdateLatestAttackTime();
 			coll.gameObject.GetComponent<MonsterBehaviour> ().direction *= -1;
 		}
@@ -116,6 +118,7 @@ public class PlayerController : MonoBehaviour {
 			pd.CurHp = pd.MaxHp;
 			pd.CurSta = pd.MaxSta;
 			GotoSpawnPosition ();
+			rb2d.velocity = Vector2.zero;
 		}	
 	}
 
