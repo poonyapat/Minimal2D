@@ -27,11 +27,6 @@ public class PlayerController : MonoBehaviour {
 		pd.SetAll(GameController.activatingPlayer);
 	}
 
-	void OnTriggerEnter2D(Collider2D coll){
-		if (coll.gameObject.CompareTag ("DeadLine"))
-			Die ();
-	}
-
 	void OnCollisionStay2D(Collision2D coll){
 		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
@@ -45,6 +40,9 @@ public class PlayerController : MonoBehaviour {
 			pd.UpdateLatestAttackTime();
 			coll.gameObject.GetComponent<MonsterBehaviour> ().direction *= -1;
 		}
+		
+		if (coll.gameObject.CompareTag ("DeadLine"))
+			Die ();
 	}
 
 	void Update(){
