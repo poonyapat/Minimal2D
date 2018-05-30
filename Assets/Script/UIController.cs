@@ -14,6 +14,8 @@ public class UIController : MonoBehaviour {
 	public Text weapon;
 	public Image upStatPage;
 
+	public Text regStaLevel, maxStaLevel, maxHpLevel, movementSpeedLevel, movementCostLevel, jumpPowerLevel;
+
 	// Use this for initialization
 	void Start() {
 		player = FindObjectOfType<PlayerController> ();
@@ -39,8 +41,18 @@ public class UIController : MonoBehaviour {
 			weapon.text = "";
 	}
 
+	public void LoadStatLevelText(){
+		regStaLevel.text = data.RegStaLevel.ToString();
+		maxStaLevel.text = data.MaxStaLevel.ToString();
+		maxHpLevel.text = data.MaxHpLevel.ToString();
+		movementSpeedLevel.text = data.MovementSpeedLevel.ToString();
+		movementCostLevel.text = data.MovementCostLevel.ToString();
+		jumpPowerLevel.text = data.JumpPowerLevel.ToString();
+	}
+
 	public void ShowUpStatPage(){
 		upStatPage.gameObject.SetActive (true);
+		LoadStatLevelText();
 	}
 
 	public void CloseUpStatPage(){
