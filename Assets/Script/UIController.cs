@@ -28,7 +28,6 @@ public class UIController : MonoBehaviour {
 			upStatPage.gameObject.SetActive (false);
 		upSkill.gameObject.SetActive (data.SkillPoint > 0);
 		upStat.gameObject.SetActive (data.StatPoint > 0);
-		Debug.Log (data.StatPoint);
 		hpBar.rectTransform.sizeDelta = new Vector2(data.HpPercentage * maxHpBar.rectTransform.sizeDelta.x, maxHpBar.rectTransform.sizeDelta.y);
 		staBar.rectTransform.sizeDelta = new Vector2 (data.StaPercentage * maxStaBar.rectTransform.sizeDelta.x, maxStaBar.rectTransform.sizeDelta.y);
 		expBar.rectTransform.sizeDelta = new Vector2 (data.ExpPercentage * maxExpBar.rectTransform.sizeDelta.x, maxExpBar.rectTransform.sizeDelta.y);

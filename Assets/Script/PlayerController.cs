@@ -34,7 +34,6 @@ public class PlayerController : MonoBehaviour {
 
 	void OnCollisionStay2D(Collision2D coll){
 		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
-			Debug.Log("hello");
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
 			pd.UpdateLatestAttackTime();
 		}
