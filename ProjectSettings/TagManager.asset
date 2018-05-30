@@ -10,6 +10,7 @@ TagManager:
   - Detector
   - Monster
   - Item
+  - Obstacle
   layers:
   - Default
   - TransparentFX
