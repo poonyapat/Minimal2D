@@ -76,6 +76,7 @@ public class PlayerData : MonoBehaviour
 
     public void SetAll(PlayerData pd)
     {
+        latestGameLevel = pd.latestGameLevel;
         level = pd.level;
         maxExp = pd.maxExp;
         curExp = pd.curExp;
