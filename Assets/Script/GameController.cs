@@ -40,10 +40,10 @@ public class GameController : MonoBehaviour
 
     public static void SavePlayerData(PlayerData data, int saveNumber)
     {
-        //Debug.Log(Application.persistentDataPath + "PlayerData.dat");
-        FileStream file = File.Create(Application.persistentDataPath + "save" + saveNumber + ".dat");
+        Debug.Log(Application.persistentDataPath + "/save" + saveNumber + ".dat");
+        FileStream file = File.Create(Application.persistentDataPath + "/save" + saveNumber + ".dat");
 
-        DataContractSerializer srl = new DataContractSerializer(data.GetType());
+        DataContractSerializer srl = new DataContractSerializer(Type.GetType("PlayerData"));
         MemoryStream streamer = new MemoryStream();
 
         srl.WriteObject(streamer, data);
@@ -51,20 +51,21 @@ public class GameController : MonoBehaviour
         file.Write(streamer.GetBuffer(), 0, streamer.GetBuffer().Length);
         file.Close();
 
-        //string result = XElement.Parse(Encoding.ASCII.GetString(streamer.GetBuffer()).Replace("\0", "")).ToString();
-        //Debug.Log(result);
+        string result = XElement.Parse(Encoding.ASCII.GetString(streamer.GetBuffer()).Replace("\0", "")).ToString();
+        Debug.Log(result);
     }
 
     public static PlayerData LoadPlayerData(int saveNumber)
     {
-        FileStream file = File.OpenRead(Application.persistentDataPath + "save" + saveNumber + ".dat");
+        Debug.Log(Application.persistentDataPath + "/save" + saveNumber + ".dat");
+        FileStream file;
+        file = File.OpenRead(Application.persistentDataPath + "/save" + saveNumber + ".dat");
         MemoryStream streamer = new MemoryStream();
         DataContractSerializer srl = new DataContractSerializer(Type.GetType("PlayerData"));
         byte[] bytes = new byte[file.Length];
         file.Read(bytes, 0, (int)file.Length);
         streamer.Write(bytes, 0, (int)file.Length);
         streamer.Seek(0, SeekOrigin.Begin);
-        Debug.Log(streamer.Position);
         PlayerData temp = (PlayerData)srl.ReadObject(streamer);
         file.Close();
         return temp;

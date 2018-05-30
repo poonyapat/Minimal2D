@@ -43,6 +43,11 @@ public class MainMenuController : MonoBehaviour
         mainCanvas.SetActive(false);
     }
 
+    public void LoadCancel(){
+        loadGameCanvas.SetActive(false);
+        mainCanvas.SetActive(true);
+    }
+
     public void ExitButton()
     {
         Application.Quit();
