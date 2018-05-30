@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
 		// jump
 		if ((Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !foot.jumping && pd.IsJumpable()) {
 			rb2d.velocity = new Vector2 (0, pd.JumpPower);
-			pd.CurSta -= pd.JumpCost;
+			pd.CurSta = pd.CurSta - pd.JumpCost;
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
 			if (runActivation && pd.IsRunnable()) {
 				rb2d.transform.Translate (pd.RunSpeed, 0, 0);
-				pd.CurSta -= pd.RunCost;
+				pd.CurSta = pd.CurSta- pd.RunCost;
 			}
 			else
 				rb2d.transform.Translate (pd.WalkSpeed , 0, 0);
@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour {
 		} else if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
 			if (runActivation && pd.IsRunnable()) {
 				rb2d.transform.Translate (-pd.RunSpeed, 0, 0);
-				pd.CurSta -= pd.RunCost;
+				pd.CurSta = pd.CurSta - pd.RunCost;
 			}
 			else
 				rb2d.transform.Translate (-pd.WalkSpeed , 0, 0);
@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour {
 
 
 	public void IsAttacked (float damage){
-		pd.CurHp -= damage;
+		pd.CurHp = pd.CurHp - damage;
 	}
 
 	public void GotoSpawnPosition(){

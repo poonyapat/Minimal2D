@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
 	public float err = 1;
 
 	void OnTriggerEnter2D(Collider2D coll){
-		if (coll.gameObject.CompareTag ("Floor") || coll.gameObject.CompareTag ("Monster") || coll.gameObject.CompareTag("Player") && coll.gameObject != owner)
+		if (coll.gameObject.CompareTag ("Obstacle") || coll.gameObject.CompareTag ("Monster") || coll.gameObject.CompareTag("Player") && coll.gameObject != owner)
 			Destroy (gameObject);
 	}
 }
