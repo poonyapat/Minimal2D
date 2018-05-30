@@ -16,6 +16,8 @@ public class PlayerData : MonoBehaviour
     private const float regStaSlp = 3;
     private const float runSpeed = 1.75f;
 
+	[DataMember]
+	private int latestGameLevel = 0;
     [DataMember]
     private int level = 1;
     [DataMember]
@@ -48,11 +50,6 @@ public class PlayerData : MonoBehaviour
     // is attacked
     private const float immortalTime = 0.25f;
     private float latestAttacked = -0.25f;
-
-    PlayerData()
-    {
-        LoadStatData();
-    }
 
 
     public static void LoadStatData()
@@ -149,6 +146,10 @@ public class PlayerData : MonoBehaviour
 
     }
 
+	public void IncreaseGameLevel(){
+		latestGameLevel++;
+	}
+
     // increase stamina regen
     public void IncreaseStaminRegen()
     {
@@ -185,6 +186,13 @@ public class PlayerData : MonoBehaviour
         jumpPowerLevel++;
         statPoint--;
     }
+
+	public int LatestGameLevel
+	{
+		get {
+			return latestGameLevel;
+		}
+	}
 
     public int LifePoint
     {

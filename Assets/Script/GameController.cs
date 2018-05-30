@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 public class GameController : MonoBehaviour{
 
-	public static int level = 0;
+	public static PlayerData activatingPlayer;
 
 	public static Vector3[] SpawnPosition = new Vector3 [] {
 		new Vector3 (-7, -2.5f, 0),
@@ -22,6 +22,10 @@ public class GameController : MonoBehaviour{
 
 	public static void ChangeScene(string sceneName){
 		SceneManager.LoadScene (sceneName);
+	}
+
+	public static void LoadLevel(int level){
+		SceneManager.LoadScene("level " + level);
 	}
 
 	public static void SavePlayerData(PlayerData data){

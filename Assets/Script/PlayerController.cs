@@ -20,11 +20,11 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		DontDestroyOnLoad (gameObject);
 		sr = GetComponent<SpriteRenderer> ();
 		rb2d = GetComponent<Rigidbody2D> ();
 		pd = GetComponent<PlayerData> ();
 		foot = GetComponentInChildren<PlayerFoot> ();
+		pd.SetAll(GameController.activatingPlayer);
 	}
 
 	void OnTriggerEnter2D(Collider2D coll){
@@ -134,6 +134,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void GotoSpawnPosition(){
-		transform.position = GameController.SpawnPosition [GameController.level];
+		transform.position = GameController.SpawnPosition [pd.LatestGameLevel];
 	}
 }

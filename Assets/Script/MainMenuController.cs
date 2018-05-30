@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class MainMenuController : MonoBehaviour {
 
+	void Start()
+	{
+		PlayerData.LoadStatData();
+	}
+
 	public void StartButton(){
-		GameController.ChangeScene ("level 1");
+		GameController.activatingPlayer = new PlayerData();
+		GameController.LoadLevel(GameController.activatingPlayer.LatestGameLevel);
 	}
 
 	public void ExitButton(){
