@@ -78,6 +78,7 @@ public partial class SaveLoadController : MonoBehaviour
 		}
 		else {
 			GameController.SavePlayerData(GameController.activatingPlayer, saveNumber);
+            GenerateSaveCanvas();
 		}
 	}
 }

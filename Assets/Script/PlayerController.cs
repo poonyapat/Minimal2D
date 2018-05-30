@@ -48,8 +48,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update(){
-		// if (Input.GetKeyDown (KeyCode.X))
-		// 	GameController.SavePlayerData (pd);
+		if (Input.GetKeyDown (KeyCode.X))
+			GameController.SavePlayerData (pd, 0);
 		// if (Input.GetKeyDown (KeyCode.Z)) {
 		// 	pd.SetAll (GameController.LoadPlayerData ());
 		// }
@@ -58,6 +58,10 @@ public class PlayerController : MonoBehaviour {
 				setWeapon (itemDrop.GetComponentInChildren<Weapon> ());
 				Destroy (itemDrop);
 			}
+			else if (itemDrop.GetComponent<ItemSavePoint>() != null) {
+				itemDrop.GetComponent<ItemSavePoint>().Activate();
+			}
+
 		}
 		// is dead?
 		if (pd.CurHp <= 0)
