@@ -24,16 +24,16 @@ public class UIController : MonoBehaviour {
 	void Update () {
 		if (player == null)
 			return;
-		if (data.statPoint <= 0 && upStatPage.IsActive())
+		if (data.StatPoint <= 0 && upStatPage.IsActive())
 			upStatPage.gameObject.SetActive (false);
-		upSkill.gameObject.SetActive (data.skillPoint > 0);
-		upStat.gameObject.SetActive (data.statPoint > 0);
-		Debug.Log (data.statPoint);
-		hpBar.rectTransform.sizeDelta = new Vector2(player.GetHpPercentage() * maxHpBar.rectTransform.sizeDelta.x, maxHpBar.rectTransform.sizeDelta.y);
-		staBar.rectTransform.sizeDelta = new Vector2 (player.GetStaPercentage () * maxStaBar.rectTransform.sizeDelta.x, maxStaBar.rectTransform.sizeDelta.y);
-		expBar.rectTransform.sizeDelta = new Vector2 (player.GetExpPercentage () * maxExpBar.rectTransform.sizeDelta.x, maxExpBar.rectTransform.sizeDelta.y);
-		levelText.text = "Level:\t" + data.GetLevel ();
-		lifeText.text = "Life:\t" + player.GetLifePoint ();
+		upSkill.gameObject.SetActive (data.SkillPoint > 0);
+		upStat.gameObject.SetActive (data.StatPoint > 0);
+		Debug.Log (data.StatPoint);
+		hpBar.rectTransform.sizeDelta = new Vector2(data.HpPercentage * maxHpBar.rectTransform.sizeDelta.x, maxHpBar.rectTransform.sizeDelta.y);
+		staBar.rectTransform.sizeDelta = new Vector2 (data.StaPercentage * maxStaBar.rectTransform.sizeDelta.x, maxStaBar.rectTransform.sizeDelta.y);
+		expBar.rectTransform.sizeDelta = new Vector2 (data.ExpPercentage * maxExpBar.rectTransform.sizeDelta.x, maxExpBar.rectTransform.sizeDelta.y);
+		levelText.text = "Level:\t" + data.Level;
+		lifeText.text = "Life:\t" + data.LifePoint;
 		if (player.weapon is Gun && ((Gun)player.weapon).ammo > 0)
 			weapon.text = player.weapon.title + " (" + ((Gun)player.weapon).BulletPref.name + ") x" + ((Gun)player.weapon).ammo;
 		else if (player.weapon == null)

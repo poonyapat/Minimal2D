@@ -6,15 +6,7 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody2D rb2d;
 	private SpriteRenderer sr;
 	private PlayerData pd;
-	// unstable status
-	public int lifePoint = 3;
-	private float curHp = 100;
-	private float curSta = 100;
-	private bool runActivation = false;
-	//private bool jumping = true;
-	// is attacked
-	private float immortalTime = 0.25f;
-	private float latestAttacked = -0.25f;
+	
 	// weapon
 	public Weapon weapon;
 	// jumping
@@ -22,6 +14,9 @@ public class PlayerController : MonoBehaviour {
 
 	// find item
 	public GameObject itemDrop;
+
+	
+    private bool runActivation = false;
 
 	// Use this for initialization
 	void Start () {
@@ -38,16 +33,17 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnCollisionStay2D(Collision2D coll){
-		if (coll.gameObject.CompareTag ("Monster") && Time.time > immortalTime + latestAttacked) {
+		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
+			Debug.Log("hello");
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
-			latestAttacked = Time.time;
+			pd.UpdateLatestAttackTime();
 		}
 	}
 
 	void OnCollisionEnter2D(Collision2D coll){
-		if (coll.gameObject.CompareTag ("Monster") && Time.time > immortalTime + latestAttacked) {
+		if (coll.gameObject.CompareTag ("Monster") && !pd.IsImmortal()) {
 			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
-			latestAttacked = Time.time;
+			pd.UpdateLatestAttackTime();
 			coll.gameObject.GetComponent<MonsterBehaviour> ().direction *= -1;
 		}
 	}
@@ -65,7 +61,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 		// is dead?
-		if (curHp <= 0)
+		if (pd.CurHp <= 0)
 			Die ();
 		if (weapon != null)
 			weapon.Use();
@@ -77,50 +73,51 @@ public class PlayerController : MonoBehaviour {
 		//jumping = rb2d.velocity.y != 0;
 
 		// jump
-		if ((Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !foot.jumping && curSta >= pd.GetJumpCost()) {
-			rb2d.velocity = new Vector2 (0, pd.GetJumpPower());
-			curSta -= pd.GetJumpCost();
+		if ((Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !foot.jumping && pd.IsJumpable()) {
+			rb2d.velocity = new Vector2 (0, pd.JumpPower);
+			pd.CurSta -= pd.JumpCost;
 		}
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		// stamina regeneration
-		if (curSta < pd.GetMaxSta()) {
-			curSta +=  (rb2d.velocity != Vector2.zero || Input.anyKey)? pd.GetRegSta() : pd.GetRegStaSlp();
+		if (pd.CurSta < pd.MaxSta ){
+			if (rb2d.velocity != Vector2.zero || Input.anyKey)
+				pd.RegenerateStamina();
+			else
+				pd.RegenerateStaminaAtSleep();
 		}
-		else
-			curSta = pd.GetMaxSta();
 		
 
 		// control movement
 		// move
 		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-			if (runActivation && curSta > pd.GetRunCost()) {
-				rb2d.transform.Translate (pd.GetRunSpeed(), 0, 0);
-				curSta -= pd.GetRunCost();
+			if (runActivation && pd.IsRunnable()) {
+				rb2d.transform.Translate (pd.RunSpeed, 0, 0);
+				pd.CurSta -= pd.RunCost;
 			}
 			else
-				rb2d.transform.Translate (pd.GetWalkSpeed() , 0, 0);
+				rb2d.transform.Translate (pd.WalkSpeed , 0, 0);
 			sr.flipX = false;
 		} else if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-			if (runActivation && curSta > pd.GetRunCost()) {
-				rb2d.transform.Translate (-pd.GetRunSpeed(), 0, 0);
-				curSta -= pd.GetRunCost();
+			if (runActivation && pd.IsRunnable()) {
+				rb2d.transform.Translate (-pd.RunSpeed, 0, 0);
+				pd.CurSta -= pd.RunCost;
 			}
 			else
-				rb2d.transform.Translate (-pd.GetWalkSpeed() , 0, 0);
+				rb2d.transform.Translate (-pd.WalkSpeed , 0, 0);
 			sr.flipX = true;
 		}
 	}
 
 	private void Die(){
-		lifePoint--;
-		if (lifePoint <= 0)
+		pd.DecreaseLifePoint();
+		if (pd.LifePoint <= 0)
 			Destroy (gameObject);
 		else {
-			curHp = pd.GetMaxHp();
-			curSta = pd.GetMaxSta();
+			pd.CurHp = pd.MaxHp;
+			pd.CurSta = pd.MaxSta;
 			GotoSpawnPosition ();
 		}	
 	}
@@ -131,24 +128,10 @@ public class PlayerController : MonoBehaviour {
 		this.weapon.owner = gameObject;
 	}
 
-	public float GetHpPercentage(){
-		return curHp / pd.GetMaxHp();
-	}
 
-	public float GetExpPercentage(){
-		return pd.GetExpPrecentage ();
-	}
-
-	public float GetStaPercentage(){
-		return curSta / pd.GetMaxSta();
-	}
 
 	public void IsAttacked (float damage){
-		curHp -= damage;
-	}
-
-	public int GetLifePoint(){
-		return lifePoint;
+		pd.CurHp -= damage;
 	}
 
 	public void GotoSpawnPosition(){
