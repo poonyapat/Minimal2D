@@ -78,6 +78,7 @@ public class PlayerData : MonoBehaviour
 
     public void SetAll(PlayerData pd)
     {
+        playerName = pd.playerName;
         latestGameLevel = pd.latestGameLevel;
         level = pd.level;
         maxExp = pd.maxExp;
@@ -189,6 +190,16 @@ public class PlayerData : MonoBehaviour
     {
         jumpPowerLevel++;
         statPoint--;
+    }
+
+    public string PlayerName{
+        get {
+            return playerName;
+        }
+        set {
+            if (value.Length > 0)
+                playerName = value;
+        }
     }
 
     public int LatestGameLevel
