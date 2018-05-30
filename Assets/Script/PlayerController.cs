@@ -48,11 +48,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.X))
-			GameController.SavePlayerData (pd);
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			pd.SetAll (GameController.LoadPlayerData ());
-		}
+		// if (Input.GetKeyDown (KeyCode.X))
+		// 	GameController.SavePlayerData (pd);
+		// if (Input.GetKeyDown (KeyCode.Z)) {
+		// 	pd.SetAll (GameController.LoadPlayerData ());
+		// }
 		if (itemDrop != null && Input.GetKey (KeyCode.Q)){
 			if (itemDrop.GetComponentInChildren<Weapon> () != null) {
 				setWeapon (itemDrop.GetComponentInChildren<Weapon> ());

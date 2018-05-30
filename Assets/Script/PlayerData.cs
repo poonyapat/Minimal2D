@@ -17,6 +17,8 @@ public class PlayerData : MonoBehaviour
     private const float runSpeed = 1.75f;
 
     [DataMember]
+    private string playerName;
+    [DataMember]
     private int latestGameLevel = 0;
     [DataMember]
     private int level = 1;
