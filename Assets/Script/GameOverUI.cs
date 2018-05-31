@@ -5,7 +5,11 @@ using UnityEngine;
 public class GameOverUI : MonoBehaviour {
 
 	public void TryAgainButton(){
-		GameController.ChangeScene ("level " + GameController.activatingPlayer.LatestGameLevel);
+		GameController.LoadLevel(GameController.activatingPlayer.LatestGameLevel);
+	}
+
+	public void MainMenuButton(){
+		GameController.ChangeScene("Main Menu");
 	}
 
 	public void ExitButton(){
