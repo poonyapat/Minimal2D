@@ -78,6 +78,7 @@ public class PlayerData : MonoBehaviour
 
     public void SetAll(PlayerData pd)
     {
+        lifePoint = pd.lifePoint;
         playerName = pd.playerName;
         latestGameLevel = pd.latestGameLevel;
         level = pd.level;
@@ -96,7 +97,7 @@ public class PlayerData : MonoBehaviour
 
     public void RegenerateStamina()
     {
-        CurSta += RegSta;
+        CurSta += RegSta*1000;
     }
 
     public void RegenerateStaminaAtSleep()
@@ -275,9 +276,9 @@ public class PlayerData : MonoBehaviour
         }
         set
         {
-            if (curHp < 0)
+            if (value < 0)
                 curHp = 0;
-            else if (curHp > MaxHp)
+            else if (value > MaxHp)
                 curHp = MaxHp;
             else
                 curHp = value;
@@ -292,9 +293,9 @@ public class PlayerData : MonoBehaviour
         }
         set
         {
-            if (curSta < 0)
+            if (value < 0)
                 curSta = 0;
-            else if (curSta > MaxSta)
+            else if (value > MaxSta)
                 curSta = MaxSta;
             else
                 curSta = value;
