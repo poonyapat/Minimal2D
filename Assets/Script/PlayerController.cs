@@ -2,156 +2,169 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-	private Rigidbody2D rb2d;
-	private SpriteRenderer sr;
-	private PlayerData pd;
-	// unstable status
-	public int lifePoint = 3;
-	private float curHp = 100;
-	private float curSta = 100;
-	private bool runActivation = false;
-	//private bool jumping = true;
-	// is attacked
-	private float immortalTime = 0.25f;
-	private float latestAttacked = -0.25f;
-	// weapon
-	public Weapon weapon;
-	// jumping
-	private PlayerFoot foot;
+public class PlayerController : MonoBehaviour
+{
+    private Rigidbody2D rb2d;
+    private SpriteRenderer sr;
+    private PlayerData pd;
 
-	// find item
-	public GameObject itemDrop;
+    // weapon
+    public Weapon weapon;
+    // jumping
+    private PlayerFoot foot;
 
-	// Use this for initialization
-	void Start () {
-		DontDestroyOnLoad (gameObject);
-		sr = GetComponent<SpriteRenderer> ();
-		rb2d = GetComponent<Rigidbody2D> ();
-		pd = GetComponent<PlayerData> ();
-		foot = GetComponentInChildren<PlayerFoot> ();
-	}
-
-	void OnTriggerEnter2D(Collider2D coll){
-		if (coll.gameObject.CompareTag ("DeadLine"))
-			Die ();
-	}
-
-	void OnCollisionStay2D(Collision2D coll){
-		if (coll.gameObject.CompareTag ("Monster") && Time.time > immortalTime + latestAttacked) {
-			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
-			latestAttacked = Time.time;
-		}
-	}
-
-	void OnCollisionEnter2D(Collision2D coll){
-		if (coll.gameObject.CompareTag ("Monster") && Time.time > immortalTime + latestAttacked) {
-			IsAttacked (coll.gameObject.GetComponent<MonsterBehaviour> ().damage);
-			latestAttacked = Time.time;
-			coll.gameObject.GetComponent<MonsterBehaviour> ().direction *= -1;
-		}
-	}
-
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.X))
-			GameController.SavePlayerData (pd);
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			pd.SetAll (GameController.LoadPlayerData ());
-		}
-		if (itemDrop != null && Input.GetKey (KeyCode.Q)){
-			if (itemDrop.GetComponentInChildren<Weapon> () != null) {
-				setWeapon (itemDrop.GetComponentInChildren<Weapon> ());
-				Destroy (itemDrop);
-			}
-		}
-		// is dead?
-		if (curHp <= 0)
-			Die ();
-		if (weapon != null)
-			weapon.Use();
-		if (Input.GetKey (KeyCode.LeftShift))
-			runActivation = true;
-		else
-			runActivation = false;
-		// set jumping state
-		//jumping = rb2d.velocity.y != 0;
-
-		// jump
-		if ((Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !foot.jumping && curSta >= pd.GetJumpCost()) {
-			rb2d.velocity = new Vector2 (0, pd.GetJumpPower());
-			curSta -= pd.GetJumpCost();
-		}
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-		// stamina regeneration
-		if (curSta < pd.GetMaxSta()) {
-			curSta +=  (rb2d.velocity != Vector2.zero || Input.anyKey)? pd.GetRegSta() : pd.GetRegStaSlp();
-		}
-		else
-			curSta = pd.GetMaxSta();
-		
-
-		// control movement
-		// move
-		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
-			if (runActivation && curSta > pd.GetRunCost()) {
-				rb2d.transform.Translate (pd.GetRunSpeed(), 0, 0);
-				curSta -= pd.GetRunCost();
-			}
-			else
-				rb2d.transform.Translate (pd.GetWalkSpeed() , 0, 0);
-			sr.flipX = false;
-		} else if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-			if (runActivation && curSta > pd.GetRunCost()) {
-				rb2d.transform.Translate (-pd.GetRunSpeed(), 0, 0);
-				curSta -= pd.GetRunCost();
-			}
-			else
-				rb2d.transform.Translate (-pd.GetWalkSpeed() , 0, 0);
-			sr.flipX = true;
-		}
-	}
-
-	private void Die(){
-		lifePoint--;
-		if (lifePoint <= 0)
-			Destroy (gameObject);
-		else {
-			curHp = pd.GetMaxHp();
-			curSta = pd.GetMaxSta();
-			GotoSpawnPosition ();
-		}	
-	}
+    // find item
+    public GameObject itemDrop;
 
 
-	public void setWeapon(Weapon weapon){
-		this.weapon = Instantiate (weapon);
-		this.weapon.owner = gameObject;
-	}
+    private bool runActivation = false;
 
-	public float GetHpPercentage(){
-		return curHp / pd.GetMaxHp();
-	}
+    // Use this for initialization
+    void Start()
+    {
+        sr = GetComponent<SpriteRenderer>();
+        rb2d = GetComponent<Rigidbody2D>();
+        pd = GetComponent<PlayerData>();
+        foot = GetComponentInChildren<PlayerFoot>();
+        pd.SetAll(GameController.activatingPlayer);
+        pd.SetVariedData(GameController.activatingPlayer);
+    }
 
-	public float GetExpPercentage(){
-		return pd.GetExpPrecentage ();
-	}
+    void OnCollisionStay2D(Collision2D coll)
+    {
+        if (coll.gameObject.CompareTag("Monster") && !pd.IsImmortal())
+        {
+            IsAttacked(coll.gameObject.GetComponent<MonsterBehaviour>().damage);
+            rb2d.AddForce(new Vector2(0, 200));
+            pd.UpdateLatestAttackTime();
+        }
+    }
 
-	public float GetStaPercentage(){
-		return curSta / pd.GetMaxSta();
-	}
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.CompareTag("Monster") && !pd.IsImmortal())
+        {
+            IsAttacked(coll.gameObject.GetComponent<MonsterBehaviour>().damage);
+            rb2d.AddForce(new Vector2(0, 300));
+            pd.UpdateLatestAttackTime();
+            coll.gameObject.GetComponent<MonsterBehaviour>().direction *= -1;
+        }
 
-	public void IsAttacked (float damage){
-		curHp -= damage;
-	}
+        if (coll.gameObject.CompareTag("DeadLine"))
+            Die();
+    }
 
-	public int GetLifePoint(){
-		return lifePoint;
-	}
+    void Update()
+    {
+        if (Time.timeScale == 0)
+            return;
+        if (Input.GetKeyDown(KeyCode.X))
+            GameController.SavePlayerData(pd, 0);
+        // if (Input.GetKeyDown (KeyCode.Z)) {
+        // 	pd.SetAll (GameController.LoadPlayerData ());
+        // }
+        if (itemDrop != null && Input.GetKey(KeyCode.Q))
+        {
+            if (itemDrop.GetComponentInChildren<Weapon>() != null)
+            {
+                setWeapon(itemDrop.GetComponentInChildren<Weapon>());
+                Destroy(itemDrop);
+            }
+            else if (itemDrop.GetComponent<ItemSavePoint>() != null)
+            {
+                itemDrop.GetComponent<ItemSavePoint>().Activate();
+            }
 
-	public void GotoSpawnPosition(){
-		transform.position = GameController.SpawnPosition [GameController.level];
-	}
+        }
+        // is dead?
+        if (pd.CurHp <= 0)
+            Die();
+        if (weapon != null)
+            weapon.Use();
+        if (Input.GetKey(KeyCode.LeftShift))
+            runActivation = true;
+        else
+            runActivation = false;
+        // set jumping state
+        //jumping = rb2d.velocity.y != 0;
+
+        // jump
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && !foot.jumping && pd.IsJumpable())
+        {
+            rb2d.velocity = new Vector2(0, pd.JumpPower);
+            pd.CurSta = pd.CurSta - pd.JumpCost;
+        }
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        // stamina regeneration
+        if (pd.CurSta < pd.MaxSta)
+        {
+            if (rb2d.velocity != Vector2.zero || Input.anyKey)
+                pd.RegenerateStamina();
+            else
+                pd.RegenerateStaminaAtSleep();
+        }
+
+
+        // control movement
+        // move
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            if (runActivation && pd.IsRunnable())
+            {
+                rb2d.transform.Translate(pd.RunSpeed, 0, 0);
+                pd.CurSta = pd.CurSta - pd.RunCost;
+            }
+            else
+                rb2d.transform.Translate(pd.WalkSpeed, 0, 0);
+            sr.flipX = false;
+        }
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            if (runActivation && pd.IsRunnable())
+            {
+                rb2d.transform.Translate(-pd.RunSpeed, 0, 0);
+                pd.CurSta = pd.CurSta - pd.RunCost;
+            }
+            else
+                rb2d.transform.Translate(-pd.WalkSpeed, 0, 0);
+            sr.flipX = true;
+        }
+    }
+
+    private void Die()
+    {
+        pd.DecreaseLifePoint();
+        if (pd.LifePoint <= 0)
+            Destroy(gameObject);
+        else
+        {
+            pd.CurHp = pd.MaxHp;
+            pd.CurSta = pd.MaxSta;
+            GotoSpawnPosition();
+            rb2d.velocity = Vector2.zero;
+        }
+    }
+
+
+    public void setWeapon(Weapon weapon)
+    {
+        this.weapon = Instantiate(weapon);
+        this.weapon.owner = gameObject;
+    }
+
+
+
+    public void IsAttacked(float damage)
+    {
+        pd.CurHp = pd.CurHp - damage;
+    }
+
+    public void GotoSpawnPosition()
+    {
+        transform.position = GameController.SpawnPosition[pd.LatestGameLevel];
+    }
 }

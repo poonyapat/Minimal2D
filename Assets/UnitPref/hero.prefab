@@ -168,7 +168,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aac91fdaa074de499d8278f41ebff05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifePoint: 3
   weapon: {fileID: 0}
   itemDrop: {fileID: 0}
 --- !u!114 &114886688910415970
@@ -182,8 +181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062134eb8bc003e458f46655d9ca3656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillPoint: 0
-  statPoint: 0
 --- !u!212 &212900344762226738
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -197,6 +194,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
