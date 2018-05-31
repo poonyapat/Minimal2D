@@ -78,7 +78,6 @@ public class PlayerData : MonoBehaviour
 
     public void SetAll(PlayerData pd)
     {
-        lifePoint = pd.lifePoint;
         playerName = pd.playerName;
         latestGameLevel = pd.latestGameLevel;
         level = pd.level;
@@ -93,6 +92,10 @@ public class PlayerData : MonoBehaviour
         movementSpeedLevel = pd.movementSpeedLevel;
         movementCostLevel = pd.movementCostLevel;
         jumpPowerLevel = pd.jumpPowerLevel;
+    }
+
+    public void SetVariedData(PlayerData pd){
+        lifePoint = pd.lifePoint;
     }
 
     public void RegenerateStamina()

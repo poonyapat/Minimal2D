@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
         pd = GetComponent<PlayerData>();
         foot = GetComponentInChildren<PlayerFoot>();
         pd.SetAll(GameController.activatingPlayer);
+        pd.SetVariedData(GameController.activatingPlayer);
     }
 
     void OnCollisionStay2D(Collision2D coll)
