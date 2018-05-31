@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 61516399247417356}
   - component: {fileID: 50116457848993376}
   - component: {fileID: 114978269790116878}
+  - component: {fileID: 114412304129367824}
   m_Layer: 0
   m_Name: monster
   m_TagString: Monster
@@ -282,6 +283,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114412304129367824
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1038426048949568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9921c8191fc726e4e8774196a287852f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lPoint: {fileID: 4016350866272784}
+  rPoint: {fileID: 4157483185912660}
+  speed: 7
+  direction: -1
 --- !u!114 &114791704523956022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -333,10 +349,6 @@ MonoBehaviour:
   maxHp: 15
   damage: 30
   exp: 60
-  lPoint: {fileID: 4016350866272784}
-  rPoint: {fileID: 4157483185912660}
-  speed: 7
-  direction: -1
   maxHpBar: {fileID: 114388990855100290}
   hpBar: {fileID: 114133392946909734}
 --- !u!212 &212262630481605084
@@ -352,6 +364,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:

@@ -47,7 +47,8 @@ public class PlayerController : MonoBehaviour
             IsAttacked(coll.gameObject.GetComponent<MonsterBehaviour>().damage);
             rb2d.AddForce(new Vector2(0, 300));
             pd.UpdateLatestAttackTime();
-            coll.gameObject.GetComponent<MonsterBehaviour>().direction *= -1;
+            if (coll.gameObject.GetComponent<MonsterLoopMovement>() != null)
+                coll.gameObject.GetComponent<MonsterLoopMovement>().direction *= -1;
         }
 
         if (coll.gameObject.CompareTag("DeadLine"))
